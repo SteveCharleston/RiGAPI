@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package rigAPI;
 
@@ -11,13 +11,17 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.classpath.icedtea.pulseaudio.PulseAudioMixerInfo;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
+import build.tools.javazic.Main;
 
 /**
  * @author steven
@@ -32,27 +36,16 @@ public class RigDBAccess {
     /**
      * @param args
      */
-    public static void main(String[] args) {
-
-        List<NameValuePair> loginParams = new ArrayList<NameValuePair>(2);
-        loginParams.add(new BasicNameValuePair("user", "user2"));
-        //loginParams.add(new BasicNameValuePair("password",
-                //"7c6a180b36896a0a8c02787eeafb0e4c"));
-        loginParams.add(new BasicNameValuePair("password",
-                "6cb75f652a9b52798eb6cf2201057c73"));
-
-        try {
-            String loginRet = httpPost(url, loginParams);
-            System.out.println(loginRet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public static void main(String[] args) throws IOException, RiGException {
     }
 
-    public void authenticate(List<NameValuePair> params) throws
-            Exception, NoUserException {
+    public String authenticate(String user, String password) throws
+            RiGException, IOException {
         String pageURL = APIURL + "authenticate.php";
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("user", user));
+        params.add(new BasicNameValuePair("password", password));
 
         String result = httpPost(pageURL, params);
 
@@ -60,17 +53,27 @@ public class RigDBAccess {
             throw new NoUserException();
         } else if ("NO_PASSWORD".equals(result)) {
             throw new NoPasswordException();
-        } else if ("BAD_AUTHENTICATON".equals(result)) {
+        } else if ("BAD_AUTHENTICATION".equals(result)) {
             throw new BadAuthenticationException();
         } else if ("BROKEN_APIKEY".equals(result)) {
             throw new BrokenAPIKeyException();
         }
 
         this.API_KEY = result;
+
+        return result;
+    }
+
+    public void getBand(List<NameValuePair> params) {
+        String pageURL = APIURL + "getBand.php";
+
+        for (NameValuePair param : params) {
+
+        }
     }
 
     public static String httpPost(String url, List<NameValuePair> urlParameters)
-            throws Exception {
+            throws RiGException, IOException {
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
 
@@ -83,7 +86,7 @@ public class RigDBAccess {
                 (response.getEntity().getContent()));
 
         StringBuffer result = new StringBuffer();
-        String line = "";
+        String line;
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
@@ -91,13 +94,14 @@ public class RigDBAccess {
         return result.toString();
     }
 
-    private static class NoUserException extends Exception { }
-
-    private static class NoPasswordException extends Exception { }
-
-    private static class BadAuthenticationException extends Exception { }
-
-    private static class BrokenAPIKeyException extends Exception { }
 }
+class RiGException extends Exception { }
 
+class NoUserException extends RiGException { }
+
+class NoPasswordException extends RiGException { }
+
+class BadAuthenticationException extends RiGException { }
+
+class BrokenAPIKeyException extends RiGException { }
 
