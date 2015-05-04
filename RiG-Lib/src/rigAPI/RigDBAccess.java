@@ -11,17 +11,20 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.classpath.icedtea.pulseaudio.PulseAudioMixerInfo;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URLEncoder;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import build.tools.javazic.Main;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * @author steven
@@ -29,18 +32,19 @@ import build.tools.javazic.Main;
  */
 public class RigDBAccess {
 
-    private String API_KEY;
+    private static String API_KEY = null;
     private static String USER_AGENT = "Mozilla/5.0";
     private static String APIURL
             = "http://bewerbung.rockimgruenen.de/api/";
+
     /**
      * @param args
      */
-    public static void main(String[] args) throws IOException, RiGException {
+    public static void main(String[] args) throws RiGException {
     }
 
     public String authenticate(String user, String password) throws
-            RiGException, IOException {
+            RiGException {
         String pageURL = APIURL + "authenticate.php";
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -64,44 +68,124 @@ public class RigDBAccess {
         return result;
     }
 
-    public void getBand(List<NameValuePair> params) {
-        String pageURL = APIURL + "getBand.php";
+    public String getBand() throws RiGException {
+        return getBand(null);
+    }
 
-        for (NameValuePair param : params) {
+    public String getBand(Integer band) throws RiGException, ParserConfigurationException, IOException, SAXException {
+        String pageURL = APIURL + "read/getBand.php";
 
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        if (band != null) {
+            params.add(new BasicNameValuePair("band", band.toString()));
         }
+
+        String result = httpPost(pageURL, params);
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+
+        StringBuilder xmlStringBuilder = new StringBuilder(result);
+        ByteArrayInputStream input = new ByteArrayInputStream
+                (xmlStringBuilder.toString().getBytes("UTF-8"));
+        Document doc = builder.parse(input);
+        Element root = doc.getDocumentElement();
+
+        return result;
     }
 
     public static String httpPost(String url, List<NameValuePair> urlParameters)
-            throws RiGException, IOException {
+            throws RiGException {
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
 
         post.setHeader("User-Agent", USER_AGENT);
-        post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-        HttpResponse response = client.execute(post);
+        urlParameters.add(new BasicNameValuePair("apikey", API_KEY));
+        try {
+            post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        } catch (IOException e) {
+            throw new httpPostException(e);
+        }
 
-        BufferedReader rd = new BufferedReader(new InputStreamReader
-                (response.getEntity().getContent()));
+        HttpResponse response = null;
+        try {
+            response = client.execute(post);
+        } catch (IOException e) {
+            throw new httpPostException(e);
+        }
+
+        BufferedReader rd = null;
+        try {
+            rd = new BufferedReader(new InputStreamReader
+                    (response.getEntity().getContent()));
+        } catch (IOException e) {
+            throw new httpPostException(e);
+        }
 
         StringBuffer result = new StringBuffer();
         String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
+        try {
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+        } catch (IOException e) {
+            throw new httpPostException(e);
         }
 
         return result.toString();
     }
 
 }
-class RiGException extends Exception { }
+class RiGException extends Exception {
+    public RiGException(Exception e) {
+        super(e);
+    }
 
-class NoUserException extends RiGException { }
+    public RiGException() {
+    }
+}
 
-class NoPasswordException extends RiGException { }
+class NoUserException extends RiGException {
+    public NoUserException(Exception e) {
+        super(e);
+    }
 
-class BadAuthenticationException extends RiGException { }
+    public NoUserException() {
+        super();
+    }
+}
 
-class BrokenAPIKeyException extends RiGException { }
+class NoPasswordException extends RiGException {
+    public NoPasswordException(Exception e) {
+        super(e);
+    }
+
+    public NoPasswordException() {
+    }
+}
+
+class BadAuthenticationException extends RiGException {
+    public BadAuthenticationException(Exception e) {
+        super(e);
+    }
+
+    public BadAuthenticationException() {
+    }
+}
+
+class BrokenAPIKeyException extends RiGException {
+    public BrokenAPIKeyException(Exception e) {
+        super(e);
+    }
+
+    public BrokenAPIKeyException() {
+    }
+}
+
+class httpPostException extends RiGException {
+    httpPostException(Exception e) {
+        super(e);
+    }
+}
 
