@@ -68,7 +68,8 @@ public class RigDBAccess {
         return result;
     }
 
-    public String getBand() throws RiGException {
+    public String getBand() throws RiGException, IOException, SAXException,
+            ParserConfigurationException {
         return getBand(null);
     }
 
