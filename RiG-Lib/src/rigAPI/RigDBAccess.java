@@ -81,12 +81,12 @@ public class RigDBAccess {
         return result;
     }
 
-    public String getBand() throws RiGException, IOException, SAXException,
+    public RigBand getBand() throws RiGException, IOException, SAXException,
             ParserConfigurationException {
         return getBand(null);
     }
 
-    public String getBand(Integer band) throws RiGException, ParserConfigurationException, IOException, SAXException {
+    public RigBand getBand(Integer band) throws RiGException, ParserConfigurationException, IOException, SAXException {
         String pageURL = APIURL + "read/getBand.php";
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -104,8 +104,9 @@ public class RigDBAccess {
                 (xmlStringBuilder.toString().getBytes("UTF-8"));
         Document doc = builder.parse(input);
         Element root = doc.getDocumentElement();
+        RigBand rigBand = new RigBand(doc);
 
-        return result;
+        return rigBand;
     }
 
     /**

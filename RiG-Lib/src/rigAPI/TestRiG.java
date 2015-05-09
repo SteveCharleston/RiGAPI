@@ -10,6 +10,8 @@ public class TestRiG {
     public static void main(String[] args) throws RiGException, ParserConfigurationException, SAXException, IOException {
         RigDBAccess rig = new RigDBAccess();
         System.out.println(rig.authenticate("user1", "password1"));
-        System.out.println(rig.getBand());
+        RigBand rigBand = rig.getBand();
+        System.out.println(rigBand.id);
+        System.out.println(rigBand.bewerbungsdatum);
     }
 }
