@@ -56,7 +56,6 @@ public class RigBand {
      */
     public RigBand(Document doc) {
         this.doc = doc;
-        this.xml = doc.getTextContent();
 
         Element e = (Element) doc
                 .getElementsByTagName("rig_band")
