@@ -112,6 +112,8 @@ public class RigBand {
             kommentar.add(kommentarParas.item(i).getTextContent());
         }
 
+        woher = getContent("woher");
+
         pictures = new ArrayList<Picture>();
         NodeList pictureEntities = getChildEntities("pictures");
         for (int i = 0; i < pictureEntities.getLength(); i++) {
