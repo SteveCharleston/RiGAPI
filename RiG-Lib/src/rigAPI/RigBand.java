@@ -182,4 +182,148 @@ public class RigBand {
     private String getContent(String tagname) {
         return doc.getElementsByTagName(tagname).item(0).getTextContent();
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getBewerbungsdatum() {
+        return bewerbungsdatum;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public int getRunde() {
+        return runde;
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProberaum() {
+        return proberaum;
+    }
+
+    public List<String> getBeschreibung() {
+        return beschreibung;
+    }
+
+    public List<String> getBesetzung() {
+        return besetzung;
+    }
+
+    public String getMusikstil() {
+        return musikstil;
+    }
+
+    public String getVoice() {
+        return voice;
+    }
+
+    public String getGruendung() {
+        return gruendung;
+    }
+
+    public String getCovermusik() {
+        return covermusik;
+    }
+
+    public int getTitel() {
+        return titel;
+    }
+
+    public boolean isGema() {
+        return gema;
+    }
+
+    public String getKontakt_nachname() {
+        return kontakt_nachname;
+    }
+
+    public String getKontakt_vorname() {
+        return kontakt_vorname;
+    }
+
+    public String getKontakt_adresse() {
+        return kontakt_adresse;
+    }
+
+    public String getKontakt_plz() {
+        return kontakt_plz;
+    }
+
+    public String getKontakt_ort() {
+        return kontakt_ort;
+    }
+
+    public String getKontakt_telefon() {
+        return kontakt_telefon;
+    }
+
+    public String getKontakt_email() {
+        return kontakt_email;
+    }
+
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public String getFacebook() {
+        return facebook;
+    }
+
+    public String getSoundcloud() {
+        return soundcloud;
+    }
+
+    public String getYoutube() {
+        return youtube;
+    }
+
+    public String getBackstage() {
+        return backstage;
+    }
+
+    public List<String> getKommentar() {
+        return kommentar;
+    }
+
+    public String getWoher() {
+        return woher;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public List<Song> getSongs() {
+        return songs;
+    }
+
+    public List<String> getVoters() {
+        return voters;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public Document getDoc() {
+        return doc;
+    }
 }

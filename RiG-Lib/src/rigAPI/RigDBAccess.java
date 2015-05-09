@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,12 +82,22 @@ public class RigDBAccess {
         return result;
     }
 
-    public RigBand getBand() throws RiGException, IOException, SAXException,
-            ParserConfigurationException {
+    /**
+     * Retrieves band informations of a random band from the RiG server
+     * @return              object with all band informations as fields
+     * @throws RiGException several subclasses of RiGException
+     */
+    public RigBand getBand() throws RiGException {
         return getBand(null);
     }
 
-    public RigBand getBand(Integer band) throws RiGException, ParserConfigurationException, IOException, SAXException {
+    /**
+     * Retrieves band informations from the RiG server
+     * @param band          numerical id of a specific band
+     * @return              object with all band informations as fields
+     * @throws RiGException several subclasses of RiGException
+     */
+    public RigBand getBand(Integer band) throws RiGException {
         String pageURL = APIURL + "read/getBand.php";
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -97,12 +108,29 @@ public class RigDBAccess {
         String result = httpPost(pageURL, params);
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
+        DocumentBuilder builder = null;
+        try {
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new rigGetBandException(e);
+        }
 
         StringBuilder xmlStringBuilder = new StringBuilder(result);
-        ByteArrayInputStream input = new ByteArrayInputStream
-                (xmlStringBuilder.toString().getBytes("UTF-8"));
-        Document doc = builder.parse(input);
+        ByteArrayInputStream input = null;
+        try {
+            input = new ByteArrayInputStream
+                    (xmlStringBuilder.toString().getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new rigGetBandException(e);
+        }
+        Document doc = null;
+        try {
+            doc = builder.parse(input);
+        } catch (IOException e) {
+            throw new rigGetBandException(e);
+        } catch (SAXException e) {
+            throw new rigGetBandException(e);
+        }
         Element root = doc.getDocumentElement();
         RigBand rigBand = new RigBand(doc);
 
@@ -209,6 +237,12 @@ class BrokenAPIKeyException extends RiGException {
 
 class httpPostException extends RiGException {
     httpPostException(Exception e) {
+        super(e);
+    }
+}
+
+class rigGetBandException extends RiGException {
+    rigGetBandException(Exception e) {
         super(e);
     }
 }
