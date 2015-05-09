@@ -27,7 +27,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * @author steven
+ * @author Steven Schalhorn
  *
  */
 public class RigDBAccess {
@@ -43,6 +43,19 @@ public class RigDBAccess {
     public static void main(String[] args) throws RiGException {
     }
 
+    /**
+     * Authenticates an user against the RiG servers. Saves the API-Key
+     * internally so that other methods don't have to care about
+     * authentication. Has to be called as first method after instantiating
+     * this class.
+     *
+     * @param user          username of an RiG user
+     * @param password      corresponding password of the RiG user
+     * @return              returns the obtained API-Key, even though it is also
+     *                      saved internally
+     * @throws RiGException the errors described in the API-Documentation as
+     *                      exceptions
+     */
     public String authenticate(String user, String password) throws
             RiGException {
         String pageURL = APIURL + "authenticate.php";
@@ -95,8 +108,17 @@ public class RigDBAccess {
         return result;
     }
 
+    /**
+     * Sends a list of parameters to a given URL and returns the response.
+     * @param url                the url of the requested page
+     * @param urlParameters      post parameters to be send to given url
+     * @return                   Returned content from server
+     * @throws httpPostException the possible IOExceptions and other exceptions,
+     *                           that coule happen during communication are
+     *                           wrapped
+     */
     public static String httpPost(String url, List<NameValuePair> urlParameters)
-            throws RiGException {
+            throws httpPostException {
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
 
