@@ -34,7 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class RigDBAccess {
 
     private static String API_KEY = null;
-    private static String APIURL
+    private static final String APIURL
             = "http://bewerbung.rockimgruenen.de/api/";
 
     /**
@@ -117,7 +117,7 @@ public class RigDBAccess {
         }
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
+        DocumentBuilder builder;
         try {
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
@@ -125,14 +125,14 @@ public class RigDBAccess {
         }
 
         StringBuilder xmlStringBuilder = new StringBuilder(result);
-        ByteArrayInputStream input = null;
+        ByteArrayInputStream input;
         try {
             input = new ByteArrayInputStream
                     (xmlStringBuilder.toString().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw new rigGetBandException(e);
         }
-        Document doc = null;
+        Document doc;
         try {
             doc = builder.parse(input);
         } catch (IOException e) {
@@ -140,7 +140,6 @@ public class RigDBAccess {
         } catch (SAXException e) {
             throw new rigGetBandException(e);
         }
-        Element root = doc.getDocumentElement();
 
         return new RigBand(doc);
     }
@@ -154,7 +153,8 @@ public class RigDBAccess {
      *                           that coule happen during communication are
      *                           wrapped
      */
-    public static String httpPost(String url, List<NameValuePair> urlParameters)
+    private static String httpPost(String url, List<NameValuePair>
+            urlParameters)
             throws httpPostException {
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
@@ -169,14 +169,14 @@ public class RigDBAccess {
             throw new httpPostException(e);
         }
 
-        HttpResponse response = null;
+        HttpResponse response;
         try {
             response = client.execute(post);
         } catch (IOException e) {
             throw new httpPostException(e);
         }
 
-        BufferedReader rd = null;
+        BufferedReader rd;
         try {
             rd = new BufferedReader(new InputStreamReader
                     (response.getEntity().getContent()));
@@ -184,7 +184,7 @@ public class RigDBAccess {
             throw new httpPostException(e);
         }
 
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String line;
         try {
             while ((line = rd.readLine()) != null) {
