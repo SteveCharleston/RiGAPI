@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by steven on 05.05.15.
+ * Contains all elements returned by getBand.php as fields
  */
-public class RigBand {
+public class RigBand extends ClassFromXML {
     private Integer id;
     private Integer bewerbungsdatum;
     private String uid;
@@ -47,7 +47,6 @@ public class RigBand {
     private List<Song> songs;
     private List<String> voters;
     private List<String> tags;
-    private Document doc;
 
     /**
      * Sets up the object according to the fields in the retrieved xml
@@ -55,8 +54,7 @@ public class RigBand {
      * @param doc the document returned from the RiG server
      */
     public RigBand(Document doc) {
-        this.doc = doc;
-
+        super(doc);
         Element e = (Element) doc
                 .getElementsByTagName("rig_band")
                 .item(0);
@@ -158,29 +156,6 @@ public class RigBand {
         song.setUrl(e.getTextContent());
 
         return song;
-    }
-
-    /**
-     * Retrieves all childnodes of a given tagname
-     * @param tagname the name of the tag whose child elements should be
-     *                retrieved
-     * @return        childelements of the given tag
-     */
-    private NodeList getChildEntities(String tagname) {
-        return doc
-                .getElementsByTagName(tagname)
-                .item(0)
-                .getChildNodes();
-    }
-
-    /**
-     * Retrieves the Text content of the first element in the given document
-     * with the given tagname
-     * @param tagname   tagname whose inner text we want to get
-     * @return          the inner text of the given tagname
-     */
-    private String getContent(String tagname) {
-        return doc.getElementsByTagName(tagname).item(0).getTextContent();
     }
 
     public Integer getId() {
@@ -321,9 +296,5 @@ public class RigBand {
 
     public List<String> getTags() {
         return tags;
-    }
-
-    public Document getDoc() {
-        return doc;
     }
 }
