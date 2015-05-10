@@ -96,7 +96,7 @@ public class RigDBAccess {
      * @return              object with all band informations as fields
      * @throws RiGException several subclasses of RiGException
      */
-    RigBand getBand(Integer band) throws RiGException {
+    public RigBand getBand(Integer band) throws RiGException {
         String pageURL = APIURL + "read/getBand.php";
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -116,6 +116,26 @@ public class RigDBAccess {
             throw new RoundCompletedException();
         }
 
+        Document doc = getDocumentFromXMLString(result);
+        return new RigBand(doc);
+    }
+
+    public String getSettings() throws RiGException {
+        String pageURL = APIURL + "read/getSettings.php";
+        String result = httpPost(pageURL);
+
+        Document doc = getDocumentFromXMLString(result);
+
+        return result;
+    }
+
+    /**
+     * Constructs a Document from a given valid xml String
+     * @param xmlString     String conatining a valid xml document
+     * @return              Document generated from given xmlString
+     * @throws RiGException Any errors occuring during parsing of xmlString
+     */
+    private static Document getDocumentFromXMLString(String xmlString) throws RiGException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
@@ -124,24 +144,36 @@ public class RigDBAccess {
             throw new rigGetBandException(e);
         }
 
-        StringBuilder xmlStringBuilder = new StringBuilder(result);
+        StringBuilder xmlStringBuilder = new StringBuilder(xmlString);
         ByteArrayInputStream input;
         try {
             input = new ByteArrayInputStream
                     (xmlStringBuilder.toString().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            throw new rigGetBandException(e);
+            throw new RiGException(e);
         }
         Document doc;
         try {
             doc = builder.parse(input);
         } catch (IOException e) {
-            throw new rigGetBandException(e);
+            throw new RiGException(e);
         } catch (SAXException e) {
-            throw new rigGetBandException(e);
+            throw new RiGException(e);
         }
 
-        return new RigBand(doc);
+        return doc;
+    }
+
+    /**
+     * Gets the content of a given url
+     * @param url                the url of the requested page
+     * @return                   returned content from server
+     * @throws httpPostException the possible IOExceptions and other exceptions,
+     *                           that coule happen during communication are
+     *                           wrapped
+     */
+    private static String httpPost(String url) throws httpPostException {
+        return httpPost(url, null);
     }
 
     /**
@@ -153,11 +185,15 @@ public class RigDBAccess {
      *                           that coule happen during communication are
      *                           wrapped
      */
-    private static String httpPost(String url, List<NameValuePair>
-            urlParameters)
+    private static String httpPost(String url,
+                                   List<NameValuePair> urlParameters)
             throws httpPostException {
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
+
+        if (urlParameters == null) {
+            urlParameters = new ArrayList<NameValuePair>();
+        }
 
         String USER_AGENT = "Mozilla/5.0";
         post.setHeader("User-Agent", USER_AGENT);
