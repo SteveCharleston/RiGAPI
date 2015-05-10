@@ -1,7 +1,9 @@
 package rigAPI;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,5 +35,35 @@ public class RigSettings extends  ClassFromXML {
         status = getContent("status");
         year = Integer.parseInt(getContent("year"));
         neccessary_votes = Integer.parseInt(getContent("neccessary_votes"));
+
+        neccessary_votes_special = new ArrayList<Integer>();
+        NodeList specialVotes = getChildEntities("neccessary_votes_special");
+        for (int i = 0; i < specialVotes.getLength(); i++) {
+            neccessary_votes_special.add(
+                    Integer.parseInt(specialVotes.item(i).getTextContent()));
+        }
+
+        tags_voice = new ArrayList<String>();
+        NodeList voiceEntities = getChildEntities("voice");
+        for (int i = 0; i < voiceEntities.getLength(); i++) {
+            tags_voice.add(voiceEntities.item(i).getTextContent());
+        }
+
+        tags_day = new ArrayList<String>();
+        NodeList dayEntities = getChildEntities("day");
+        for (int i = 0; i < dayEntities.getLength(); i++) {
+            tags_day.add(dayEntities.item(i).getTextContent());
+        }
+
+        tags_music = new ArrayList<String>();
+        NodeList musicEntities = getChildEntities("music");
+        for (int i = 0; i < musicEntities.getLength(); i++) {
+            tags_music.add(musicEntities.item(i).getTextContent());
+        }
+
+        NodeList limitsNodes = getChildEntities("limits");
+        for (int i = 0; i < limitsNodes.getLength(); i++) {
+            limitsNodes.item(i).getNodeName();
+        }
     }
 }
