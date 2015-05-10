@@ -34,12 +34,11 @@ import javax.xml.parsers.ParserConfigurationException;
 public class RigDBAccess {
 
     private static String API_KEY = null;
-    private static String USER_AGENT = "Mozilla/5.0";
     private static String APIURL
             = "http://bewerbung.rockimgruenen.de/api/";
 
     /**
-     * @param args
+     * @param args Arguments are currently unused
      */
     public static void main(String[] args) throws RiGException {
     }
@@ -77,7 +76,7 @@ public class RigDBAccess {
             throw new BrokenAPIKeyException();
         }
 
-        this.API_KEY = result;
+        API_KEY = result;
 
         return result;
     }
@@ -97,7 +96,7 @@ public class RigDBAccess {
      * @return              object with all band informations as fields
      * @throws RiGException several subclasses of RiGException
      */
-    public RigBand getBand(Integer band) throws RiGException {
+    RigBand getBand(Integer band) throws RiGException {
         String pageURL = APIURL + "read/getBand.php";
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -106,6 +105,16 @@ public class RigDBAccess {
         }
 
         String result = httpPost(pageURL, params);
+
+        if ("BAD_BAND".equals(result)) {
+            throw new BadBandException();
+        } else if ("GROUP_ONLY".equals(result)) {
+            throw new GroupOnlyException();
+        } else if ("BAND_NONEXISTANT".equals(result)) {
+            throw new BandNonexistentException();
+        } else if ("ROUND_COMPLETED".equals(result)) {
+            throw new RoundCompletedException();
+        }
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
@@ -132,9 +141,8 @@ public class RigDBAccess {
             throw new rigGetBandException(e);
         }
         Element root = doc.getDocumentElement();
-        RigBand rigBand = new RigBand(doc);
 
-        return rigBand;
+        return new RigBand(doc);
     }
 
     /**
@@ -151,6 +159,7 @@ public class RigDBAccess {
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
 
+        String USER_AGENT = "Mozilla/5.0";
         post.setHeader("User-Agent", USER_AGENT);
 
         urlParameters.add(new BasicNameValuePair("apikey", API_KEY));
@@ -195,6 +204,46 @@ class RiGException extends Exception {
     }
 
     public RiGException() {
+    }
+}
+
+class RoundCompletedException extends RiGException {
+    public RoundCompletedException(Exception e) {
+        super(e);
+    }
+
+    public RoundCompletedException() {
+        super();
+    }
+}
+
+class BandNonexistentException extends RiGException {
+    public BandNonexistentException(Exception e) {
+        super(e);
+    }
+
+    public BandNonexistentException() {
+        super();
+    }
+}
+
+class GroupOnlyException extends RiGException {
+    public GroupOnlyException(Exception e) {
+        super(e);
+    }
+
+    public GroupOnlyException() {
+        super();
+    }
+}
+
+class BadBandException extends RiGException {
+    public BadBandException(Exception e) {
+        super(e);
+    }
+
+    public BadBandException() {
+        super();
     }
 }
 
