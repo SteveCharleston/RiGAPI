@@ -5,13 +5,14 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.WeakHashMap;
 
 /**
  * Contains all fields returned by getSettings.php as fields
  */
 public class RigSettings extends  ClassFromXML {
     private String status;
-    private int year;
+    private Integer year;
     private int neccessary_votes;
     private List<Integer> neccessary_votes_special;
     private List<String> tags_voice;
@@ -32,12 +33,13 @@ public class RigSettings extends  ClassFromXML {
      */
     public RigSettings(Document doc) {
         super(doc);
+
         status = getContent("status");
         year = Integer.parseInt(getContent("year"));
-        neccessary_votes = Integer.parseInt(getContent("neccessary_votes"));
+        neccessary_votes = Integer.parseInt(getContent("necessary_votes"));
 
         neccessary_votes_special = new ArrayList<Integer>();
-        NodeList specialVotes = getChildEntities("neccessary_votes_special");
+        NodeList specialVotes = getChildEntities("necessary_votes_special");
         for (int i = 0; i < specialVotes.getLength(); i++) {
             neccessary_votes_special.add(
                     Integer.parseInt(specialVotes.item(i).getTextContent()));
@@ -61,9 +63,15 @@ public class RigSettings extends  ClassFromXML {
             tags_music.add(musicEntities.item(i).getTextContent());
         }
 
+        String nodename;
+        String localname;
         NodeList limitsNodes = getChildEntities("limits");
         for (int i = 0; i < limitsNodes.getLength(); i++) {
-            limitsNodes.item(i).getNodeName();
+            nodename = limitsNodes.item(i).getNodeName();
+            localname = limitsNodes.item(i).getLocalName();
+
+            System.out.println(nodename);
+            System.out.println(localname);
         }
     }
 }

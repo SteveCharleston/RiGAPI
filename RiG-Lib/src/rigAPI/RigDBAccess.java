@@ -126,6 +126,7 @@ public class RigDBAccess {
 
         Document doc = getDocumentFromXMLString(result);
 
+        System.out.println(new RigSettings(doc));
         return result;
     }
 

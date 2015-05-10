@@ -9,7 +9,7 @@ import org.w3c.dom.NodeList;
 public class ClassFromXML {
     private Document doc;
 
-    public ClassFromXML(Document document) {
+    public ClassFromXML(Document doc) {
         this.doc = doc;
     }
 

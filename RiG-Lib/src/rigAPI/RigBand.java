@@ -55,6 +55,7 @@ public class RigBand extends ClassFromXML {
      */
     public RigBand(Document doc) {
         super(doc);
+
         Element e = (Element) doc
                 .getElementsByTagName("rig_band")
                 .item(0);
