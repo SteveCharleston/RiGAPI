@@ -91,7 +91,7 @@ public class RigDBAccess {
     }
 
     /**
-     * Retrieves band informations from the RiG server
+     * Retrieves band informations from getBand.php
      * @param band          numerical id of a specific band
      * @return              object with all band informations as fields
      * @throws RiGException several subclasses of RiGException
@@ -120,6 +120,11 @@ public class RigDBAccess {
         return new RigBand(doc);
     }
 
+    /**
+     * Retrieves settings from getSettings.php
+     * @return              object with all settings as fields
+     * @throws RiGException several subclasses of RiGException
+     */
     public RigSettings getSettings() throws RiGException {
         String pageURL = APIURL + "read/getSettings.php";
         String result = httpPost(pageURL);
@@ -127,6 +132,20 @@ public class RigDBAccess {
         Document doc = getDocumentFromXMLString(result);
 
         return new RigSettings(doc);
+    }
+
+    /**
+     * Retrieves statistics from getStatistic.php
+     * @return              object with all statistics as fields
+     * @throws RiGException several subclasses of RiGException
+     */
+    public RigStatistic getStatistic() throws RiGException {
+        String pageUrl = APIURL + "read/getStatistic.php";
+        String result = httpPost(pageUrl);
+
+        Document doc = getDocumentFromXMLString(result);
+
+        return new RigStatistic(doc);
     }
 
     /**
