@@ -114,4 +114,60 @@ public class RigSettings extends  ClassFromXML {
             }
         }
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public int getNeccessary_votes() {
+        return neccessary_votes;
+    }
+
+    public List<Integer> getNeccessary_votes_special() {
+        return neccessary_votes_special;
+    }
+
+    public List<String> getTags_voice() {
+        return tags_voice;
+    }
+
+    public List<String> getTags_day() {
+        return tags_day;
+    }
+
+    public List<String> getTags_music() {
+        return tags_music;
+    }
+
+    public int getLimit_vote_min() {
+        return limit_vote_min;
+    }
+
+    public int getLimit_vote_max() {
+        return limit_vote_max;
+    }
+
+    public int getLimit_tag_min() {
+        return limit_tag_min;
+    }
+
+    public int getLimit_tag_max() {
+        return limit_tag_max;
+    }
+
+    public int getLimit_day_min() {
+        return limit_day_min;
+    }
+
+    public int getLimit_day_max() {
+        return limit_day_max;
+    }
+
+    public int getLimit_bands() {
+        return limit_bands;
+    }
 }
