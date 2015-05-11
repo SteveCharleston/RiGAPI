@@ -1,6 +1,7 @@
 package rigAPI;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
@@ -25,6 +26,26 @@ public class RigSettings extends  ClassFromXML {
     private int limit_day_min;
     private int limit_day_max;
     private int limit_bands;
+
+    @Override
+    public String toString() {
+        return "RigSettings{" +
+                "status='" + status + '\'' +
+                ", year=" + year +
+                ", neccessary_votes=" + neccessary_votes +
+                ", neccessary_votes_special=" + neccessary_votes_special +
+                ", tags_voice=" + tags_voice +
+                ", tags_day=" + tags_day +
+                ", tags_music=" + tags_music +
+                ", limit_vote_min=" + limit_vote_min +
+                ", limit_vote_max=" + limit_vote_max +
+                ", limit_tag_min=" + limit_tag_min +
+                ", limit_tag_max=" + limit_tag_max +
+                ", limit_day_min=" + limit_day_min +
+                ", limit_day_max=" + limit_day_max +
+                ", limit_bands=" + limit_bands +
+                '}';
+    }
 
     /**
      * Sets up the object according to the fields in the retrieved xml
@@ -66,12 +87,31 @@ public class RigSettings extends  ClassFromXML {
         String nodename;
         String localname;
         NodeList limitsNodes = getChildEntities("limits");
-        for (int i = 0; i < limitsNodes.getLength(); i++) {
-            nodename = limitsNodes.item(i).getNodeName();
-            localname = limitsNodes.item(i).getLocalName();
+        Element limitsElement = (Element) limitsNodes;
 
-            System.out.println(nodename);
-            System.out.println(localname);
+        for (int i = 0; i < limitsNodes.getLength(); i++) {
+            Element nodeElement = (Element) limitsNodes.item(i);
+            if (nodeElement.getTagName().equals("vote")) {
+                limit_vote_min = Integer.parseInt(
+                        nodeElement.getChildNodes().item(0).getTextContent());
+                limit_vote_max = Integer.parseInt(
+                        nodeElement.getChildNodes().item(1).getTextContent());
+
+            } else if (nodeElement.getTagName().equals("tag")) {
+                limit_tag_min = Integer.parseInt(
+                        nodeElement.getChildNodes().item(0).getTextContent());
+                limit_tag_max = Integer.parseInt(
+                        nodeElement.getChildNodes().item(1).getTextContent());
+
+            } else if (nodeElement.getTagName().equals("day")) {
+                limit_day_min = Integer.parseInt(
+                        nodeElement.getChildNodes().item(0).getTextContent());
+                limit_day_max = Integer.parseInt(
+                        nodeElement.getChildNodes().item(1).getTextContent());
+
+            } else if (nodeElement.getTagName().equals("bands")) {
+                limit_bands = Integer.parseInt(nodeElement.getTextContent());
+            }
         }
     }
 }

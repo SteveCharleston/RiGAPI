@@ -48,6 +48,47 @@ public class RigBand extends ClassFromXML {
     private List<String> voters;
     private List<String> tags;
 
+    @Override
+    public String toString() {
+        return "RigBand{" +
+                "id=" + id +
+                ", bewerbungsdatum=" + bewerbungsdatum +
+                ", uid='" + uid + '\'' +
+                ", status='" + status + '\'' +
+                ", runde=" + runde +
+                ", result=" + result +
+                ", day='" + day + '\'' +
+                ", name='" + name + '\'' +
+                ", proberaum='" + proberaum + '\'' +
+                ", beschreibung=" + beschreibung +
+                ", besetzung=" + besetzung +
+                ", musikstil='" + musikstil + '\'' +
+                ", voice='" + voice + '\'' +
+                ", gruendung='" + gruendung + '\'' +
+                ", covermusik='" + covermusik + '\'' +
+                ", titel=" + titel +
+                ", gema=" + gema +
+                ", kontakt_nachname='" + kontakt_nachname + '\'' +
+                ", kontakt_vorname='" + kontakt_vorname + '\'' +
+                ", kontakt_adresse='" + kontakt_adresse + '\'' +
+                ", kontakt_plz='" + kontakt_plz + '\'' +
+                ", kontakt_ort='" + kontakt_ort + '\'' +
+                ", kontakt_telefon='" + kontakt_telefon + '\'' +
+                ", kontakt_email='" + kontakt_email + '\'' +
+                ", homepage='" + homepage + '\'' +
+                ", facebook='" + facebook + '\'' +
+                ", soundcloud='" + soundcloud + '\'' +
+                ", youtube='" + youtube + '\'' +
+                ", backstage='" + backstage + '\'' +
+                ", kommentar=" + kommentar +
+                ", woher='" + woher + '\'' +
+                ", pictures=" + pictures +
+                ", songs=" + songs +
+                ", voters=" + voters +
+                ", tags=" + tags +
+                '}';
+    }
+
     /**
      * Sets up the object according to the fields in the retrieved xml
      * document one gets when requesting a Band and its infos.

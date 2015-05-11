@@ -120,14 +120,13 @@ public class RigDBAccess {
         return new RigBand(doc);
     }
 
-    public String getSettings() throws RiGException {
+    public RigSettings getSettings() throws RiGException {
         String pageURL = APIURL + "read/getSettings.php";
         String result = httpPost(pageURL);
 
         Document doc = getDocumentFromXMLString(result);
 
-        System.out.println(new RigSettings(doc));
-        return result;
+        return new RigSettings(doc);
     }
 
     /**
