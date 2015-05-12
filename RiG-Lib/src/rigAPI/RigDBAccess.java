@@ -148,13 +148,23 @@ public class RigDBAccess {
         return new RigStatistic(doc);
     }
 
+    public RigToplist getToplist(Day day) throws RiGException {
+        String pageUrl = APIURL + "read/getToplist.php";
+        String result = httpPost(pageUrl);
+
+        Document doc = getDocumentFromXMLString(result);
+
+        return new RigTop
+    }
+
     /**
      * Constructs a Document from a given valid xml String
      * @param xmlString     String conatining a valid xml document
      * @return              Document generated from given xmlString
      * @throws RiGException Any errors occuring during parsing of xmlString
      */
-    private static Document getDocumentFromXMLString(String xmlString) throws RiGException {
+    private static Document getDocumentFromXMLString(String xmlString)
+            throws RiGException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
@@ -350,4 +360,3 @@ class rigGetBandException extends RiGException {
         super(e);
     }
 }
-
