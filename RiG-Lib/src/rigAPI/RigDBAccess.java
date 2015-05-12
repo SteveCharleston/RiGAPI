@@ -227,6 +227,46 @@ public class RigDBAccess {
     }
 
     /**
+     * Sets the Weekday for a band
+     * @param band numerical Band id as specified by getBand.php
+     * @param day Day to set the band to
+     * @return OK on success
+     * @throws RiGException General error during execution
+     * @throws MissingBandException No Band-ID has been given
+     * @throws MissingValueException No Day has been given
+     * @throws BadValueException Day is not in acceptable range
+     * @throws NotInRoundException Given band is not in current round so it
+     *                             isn't votable
+     * @throws GroupOnlyException Last round has been started, only group
+     * accounts are able to vote
+     */
+    public String setDay(Integer band, Day day) throws RiGException {
+        String pageUrl = APIURL + "write/setDay.php";
+
+        Integer dayVal = day.ordinal();
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("band", band.toString()));
+        params.add(new BasicNameValuePair("value", dayVal.toString()));
+
+        String result = httpPost(pageUrl, params);
+
+        if ("MISSING_BAND".equals(result)) {
+            throw new MissingBandException();
+        } else if ("MISSING_VALUE".equals(result)) {
+            throw new MissingValueException();
+        } else if ("BAD_VALUE".equals(result)) {
+            throw new BadValueException();
+        } else if ("NOT_IN_ROUND".equals(result)) {
+            throw new NotInRoundException();
+        } else if ("GROUP_ONLY".equals(result)) {
+            throw new GroupOnlyException();
+        }
+
+        return result;
+    }
+
+    /**
      * Constructs a Document from a given valid xml String
      * @param xmlString     String conatining a valid xml document
      * @return              Document generated from given xmlString
@@ -472,5 +512,41 @@ class BadIDException extends RiGException {
     }
 
     public BadIDException() {
+    }
+}
+
+class MissingBandException extends RiGException {
+    public MissingBandException(Exception e) {
+        super(e);
+    }
+
+    public MissingBandException() {
+    }
+}
+
+class MissingValueException extends RiGException {
+    public MissingValueException(Exception e) {
+        super(e);
+    }
+
+    public MissingValueException() {
+    }
+}
+
+class NotInRoundException extends RiGException {
+    public NotInRoundException(Exception e) {
+        super(e);
+    }
+
+    public NotInRoundException() {
+    }
+}
+
+class BadValueException extends RiGException {
+    public BadValueException(Exception e) {
+        super(e);
+    }
+
+    public BadValueException() {
     }
 }
