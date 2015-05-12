@@ -13,6 +13,7 @@ public class TestRiG {
         System.out.println(rig.getBand());
         System.out.println(rig.getSettings());
         System.out.println(rig.getStatistic());
-        System.out.println(rig.getToplist(Day.FRSA));
+        System.out.println(rig.getToplist(Day.FR));
+        System.out.println(rig.searchBand("Mind"));
     }
 }

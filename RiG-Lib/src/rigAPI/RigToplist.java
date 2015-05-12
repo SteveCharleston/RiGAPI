@@ -13,7 +13,7 @@ import rigAPI.ToplistBand;
 /**
  * Contains all values returned by getToplist.php as fields
  */
-public class RigToplist {
+public class RigToplist extends ClassFromXML {
     private Day day;
     private List<ToplistBand> bands;
 
@@ -23,6 +23,8 @@ public class RigToplist {
      * @param doc the document returned from getToplist.php
      */
     public RigToplist(Document doc) {
+        super(doc);
+
         Element e = (Element) doc
                 .getElementsByTagName("rig_toplist")
                 .item(0);

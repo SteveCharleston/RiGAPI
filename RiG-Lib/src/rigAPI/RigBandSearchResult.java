@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Represents a search result retrieved from searchBand.php
  */
-public class RigBandSearchResult {
+public class RigBandSearchResult extends ClassFromXML{
     private String searchString;
     private List<SearchResultBand> bands;
 
@@ -19,7 +19,12 @@ public class RigBandSearchResult {
      * @param doc document returned by RiG server
      */
     public RigBandSearchResult(Document doc) {
-        Element e = (Element) doc.getElementsByTagName("rig_search");
+        super(doc);
+
+        Element e = (Element) doc
+                .getElementsByTagName("rig_search")
+                .item(0);
+
         searchString = e.getAttribute("string");
 
         bands = new ArrayList<SearchResultBand>();
