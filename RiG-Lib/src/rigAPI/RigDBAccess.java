@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,7 +149,16 @@ public class RigDBAccess {
         return new RigStatistic(doc);
     }
 
-    public RigToplist getToplist(Day day) throws RiGException {
+    /**
+     * Retrieves the toplist from getToplist.php
+     * @param day  Day to show the toplist for
+     * @return RigToplist instance
+     * @throws MissingDayException is thrown if no day is given
+     * @throws BadDayException is thrown when day is not FR or SA
+     * @throws RiGException is thrown when XML parsing fails
+     */
+    public RigToplist getToplist(Day day)
+            throws RiGException {
         String pageUrl = APIURL + "read/getToplist.php";
 
         Integer dayInt = day.ordinal();
@@ -156,9 +166,39 @@ public class RigDBAccess {
         params.add(new BasicNameValuePair("day", dayInt.toString()));
 
         String result = httpPost(pageUrl, params);
-        Document doc = getDocumentFromXMLString(result);
 
+        if ("MISSING_DAY".equals(result)) {
+            throw new MissingDayException();
+        } else if ("BAD_DAY".equals(result)) {
+            throw new BadDayException();
+        }
+
+        Document doc = getDocumentFromXMLString(result);
         return new RigToplist(doc);
+    }
+
+    /**
+     * Retrieves a search result from searchBand.php
+     * @param bandname pattern to search for
+     * @return RigBandSearchResult instance
+     * @throws MissingStringException Search string is too short
+     * @throws RiGException
+     */
+    public RigBandSearchResult searchBand(String bandname)
+        throws RiGException {
+        String pageUrl = APIURL + "read/searchBand.php";
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("string", bandname));
+
+        String result = httpPost(pageUrl, params);
+
+        if ("MISSING_STRING".equals(result)) {
+            throw new MissingStringException();
+        }
+
+        Document doc = getDocumentFromXMLString(result);
+        return new RigBandSearchResult(doc);
     }
 
     /**
@@ -362,5 +402,32 @@ class httpPostException extends RiGException {
 class rigGetBandException extends RiGException {
     rigGetBandException(Exception e) {
         super(e);
+    }
+}
+
+class MissingDayException extends RiGException {
+    public MissingDayException(Exception e) {
+        super(e);
+    }
+
+    public MissingDayException() {
+    }
+}
+
+class BadDayException extends RiGException {
+    public BadDayException(Exception e) {
+        super(e);
+    }
+
+    public BadDayException() {
+    }
+}
+
+class MissingStringException extends RiGException {
+    public MissingStringException(Exception e) {
+        super(e);
+    }
+
+    public MissingStringException() {
     }
 }
