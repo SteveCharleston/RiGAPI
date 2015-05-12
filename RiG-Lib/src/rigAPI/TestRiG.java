@@ -11,7 +11,7 @@ public class TestRiG {
         RigDBAccess rig = new RigDBAccess();
         System.out.println(rig.authenticate("user1", "password1"));
 
-        RigBand band = rig.getBand();
+        RigBand band = rig.getBand(100);
         System.out.println(band);
 
         System.out.println(rig.getSettings());
@@ -19,5 +19,7 @@ public class TestRiG {
         System.out.println(rig.getToplist(Day.FR));
         System.out.println(rig.searchBand("Mind"));
         System.out.println(rig.downloadFile(band.getPictures().get(0).getId()));
+        System.out.println(rig.setDay(100, Day.FR));
+        System.out.println(rig.setTag(100, 1));
     }
 }
