@@ -150,11 +150,15 @@ public class RigDBAccess {
 
     public RigToplist getToplist(Day day) throws RiGException {
         String pageUrl = APIURL + "read/getToplist.php";
-        String result = httpPost(pageUrl);
 
+        Integer dayInt = day.ordinal();
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("day", dayInt.toString()));
+
+        String result = httpPost(pageUrl, params);
         Document doc = getDocumentFromXMLString(result);
 
-        return new RigTop
+        return new RigToplist(doc);
     }
 
     /**

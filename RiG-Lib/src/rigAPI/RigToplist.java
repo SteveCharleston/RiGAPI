@@ -81,4 +81,12 @@ public class RigToplist {
             return Day.FRSA;
         }
     }
+
+    @Override
+    public String toString() {
+        return "RigToplist{" +
+                "day=" + day +
+                ", bands=" + bands +
+                '}';
+    }
 }
