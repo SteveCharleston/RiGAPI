@@ -202,6 +202,31 @@ public class RigDBAccess {
     }
 
     /**
+     * Returns a download as String
+     * @param download File-ID as noted in getBand.php
+     * @return         String represantation of downloaded file
+     * @throws httpPostException Errors while downloading
+     * @throws MissingIDException If no download id is given
+     * @throws BadIDException if an illigal download id is given
+     */
+    public String downloadFile(Integer download) throws RiGException {
+        String pageUrl = APIURL + "read/downloadFile.php?";
+        pageUrl = pageUrl
+                + "apikey=" + API_KEY
+                + "&download=" + download.toString();
+
+        String result = httpPost(pageUrl);
+
+        if ("MISSING_ID".equals(result)) {
+            throw new MissingIDException();
+        } else if ("BAD_ID".equals(result)) {
+            throw new BadIDException();
+        }
+
+        return result;
+    }
+
+    /**
      * Constructs a Document from a given valid xml String
      * @param xmlString     String conatining a valid xml document
      * @return              Document generated from given xmlString
@@ -429,5 +454,23 @@ class MissingStringException extends RiGException {
     }
 
     public MissingStringException() {
+    }
+}
+
+class MissingIDException extends RiGException {
+    public MissingIDException(Exception e) {
+        super(e);
+    }
+
+    public MissingIDException() {
+    }
+}
+
+class BadIDException extends RiGException {
+    public BadIDException(Exception e) {
+        super(e);
+    }
+
+    public BadIDException() {
     }
 }

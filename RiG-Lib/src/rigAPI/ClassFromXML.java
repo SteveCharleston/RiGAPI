@@ -4,7 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 /**
- * Created by steven on 10.05.15.
+ * Common anchestor for all classes that parse an xml Document
  */
 public class ClassFromXML {
     private Document doc;
