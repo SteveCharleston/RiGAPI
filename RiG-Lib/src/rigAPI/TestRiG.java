@@ -21,5 +21,6 @@ public class TestRiG {
         System.out.println(rig.downloadFile(band.getPictures().get(0).getId()));
         System.out.println(rig.setDay(100, Day.FR));
         System.out.println(rig.setTag(100, 1));
+        System.out.println(rig.vote(100, 2));
     }
 }
